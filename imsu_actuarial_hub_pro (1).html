@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101a35">
+<title>IMSU Actuarial Hub | Student Portal</title>
+<style>
+:root{
+  --bg:#f4f6fb;--surface:#fff;--surface-2:#f8faff;--text:#18233d;
+  --muted:#73809b;--line:#e7ebf4;--primary:#3559e0;--primary-2:#2544bd;
+  --green:#16a36a;--amber:#f2a93b;--red:#df4f65;--shadow:0 12px 35px rgba(30,47,90,.07);
+  --sidebar:#101a35;--sidebar-muted:#aab5d0;
+}
+body.dark{
+  --bg:#0d1324;--surface:#151e33;--surface-2:#1a2540;--text:#edf2ff;
+  --muted:#a2aec8;--line:#2b3650;--primary:#7b91ff;--primary-2:#6278ed;
+  --green:#39c58a;--amber:#ffc15c;--red:#ff7184;--shadow:0 12px 35px rgba(0,0,0,.18);
+  --sidebar:#090f20;--sidebar-muted:#aab5d0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .25s,color .25s}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #91a5ff;outline-offset:2px}
+a{color:inherit;text-decoration:none}
+button:disabled{opacity:.55;cursor:not-allowed}
+.app{min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:250px;background:var(--sidebar);color:white;padding:25px 16px;display:flex;flex-direction:column;z-index:20;transition:transform .25s}
+.brand{display:flex;align-items:center;gap:11px;padding:0 10px 30px}
+.brand-mark{height:42px;width:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#6e87ff,#4055d9);font-size:22px;font-weight:900;box-shadow:0 8px 20px #415be955}
+.brand h1{font-size:15px;letter-spacing:.6px}.brand p{font-size:11px;color:var(--sidebar-muted);margin-top:4px}
+.nav-label{padding:8px 13px;color:#7381a4;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.nav-link{display:flex;align-items:center;gap:12px;color:var(--sidebar-muted);padding:12px 13px;margin:3px 0;border-radius:11px;font-size:13px;font-weight:650;transition:.2s;border:0;background:transparent;width:100%;text-align:left}
+.nav-link .nav-icon{width:22px;text-align:center;font-size:17px}
+.nav-link:hover,.nav-link.active{background:#27375e;color:white}.nav-link.active{box-shadow:inset 3px 0 #8ea0ff}
+.side-bottom{margin-top:auto}
+.help-card{margin:16px 5px 10px;padding:15px;border:1px solid #344263;border-radius:14px;background:#192544}
+.help-card strong{font-size:12px}.help-card p{font-size:11px;line-height:1.6;color:var(--sidebar-muted);margin:7px 0 12px}
+.help-card a{font-size:11px;color:#a9b7ff;font-weight:700}
+.main{margin-left:250px;min-height:100vh}
+.topbar{height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 34px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.top-left{display:flex;align-items:center;gap:15px;min-width:0}
+.page-heading{font-size:19px;font-weight:800;letter-spacing:-.5px}.crumb{font-size:11px;color:var(--muted);margin-top:4px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.search-box{position:relative;width:min(280px,28vw)}
+.search-box input{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:12px}
+.search-symbol{position:absolute;left:13px;top:10px;color:var(--muted)}
+.icon-btn{height:39px;width:39px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);display:grid;place-items:center;font-size:17px;position:relative}
+.icon-btn:hover{background:var(--surface-2)}
+.dot{height:7px;width:7px;background:var(--red);border-radius:50%;position:absolute;right:8px;top:7px;border:1px solid var(--surface)}
+.avatar{height:38px;width:38px;border-radius:13px;display:grid;place-items:center;background:#e0e7ff;color:#3349b8;font-weight:850;font-size:13px;border:0}
+body.dark .avatar{background:#29375e;color:#dbe2ff}
+.menu-btn{display:none}
+.content{max-width:1500px;margin:0 auto;padding:28px 34px 45px}
+.view{display:none;animation:fadeUp .25s ease}.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.welcome{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:31px 34px;border-radius:22px;color:#fff;background:linear-gradient(115deg,#1e2e70 0%,#3559e0 58%,#647cff 100%);box-shadow:0 18px 45px #3559e028}
+.welcome:after{content:"";position:absolute;width:280px;height:280px;border:1px solid #ffffff20;border-radius:50%;right:11%;top:-155px;box-shadow:0 0 0 35px #ffffff09,0 0 0 70px #ffffff06}
+.welcome-copy,.welcome-side{position:relative;z-index:1}
+.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:800;text-transform:uppercase;opacity:.78}
+.welcome h2{font-size:clamp(24px,3vw,34px);letter-spacing:-1px;margin:12px 0 9px}
+.welcome p{font-size:13px;line-height:1.7;color:#e0e6ff;max-width:520px}
+.welcome-side{text-align:right;min-width:170px}.date-label{font-size:11px;color:#dce4ff}.big-date{font-size:23px;font-weight:850;margin:7px 0}.welcome-side .pill{display:inline-flex;margin-top:5px}
+.btn{border:0;border-radius:10px;padding:11px 15px;font-size:12px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
+.btn-primary{background:var(--primary);color:white}.btn-primary:hover{background:var(--primary-2);transform:translateY(-1px)}
+.btn-light{background:white;color:#2948be}.btn-outline{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn-soft{background:var(--surface-2);color:var(--text);border:1px solid var(--line)}
+.btn-danger{background:#fff0f2;color:#bd2d45}.btn-small{padding:8px 11px;font-size:11px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:800;background:#e6f8ef;color:#168354}
+.pill.blue{background:#e9edff;color:#3553cf}.pill.amber{background:#fff3dd;color:#9d6810}.pill.gray{background:var(--surface-2);color:var(--muted)}
+body.dark .pill{background:#173c32;color:#7ce0b6}body.dark .pill.blue{background:#27345f;color:#b8c4ff}body.dark .pill.amber{background:#4a3820;color:#ffd27c}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:29px 0 15px}
+.section-head h3{font-size:16px;letter-spacing:-.35px}.section-head p{font-size:11px;color:var(--muted);margin-top:5px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-top:20px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:var(--shadow);min-width:0}
+.stat-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stat-icon{height:38px;width:38px;border-radius:12px;display:grid;place-items:center;font-size:18px;background:#edf0ff}
+.stat-icon.green{background:#e5f8ef}.stat-icon.orange{background:#fff3df}.stat-icon.pink{background:#ffedf0}
+body.dark .stat-icon{background:#27345f}body.dark .stat-icon.green{background:#173c32}body.dark .stat-icon.orange{background:#4a3820}body.dark .stat-icon.pink{background:#482633}
+.stat h4{font-size:27px;letter-spacing:-1px;margin:17px 0 4px}.stat p{font-size:11px;color:var(--muted)}
+.stat-foot{font-size:10px;color:var(--green);margin-top:12px}
+.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(270px,1fr);gap:17px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:21px;box-shadow:var(--shadow);min-width:0}
+.panel-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:17px}
+.panel-title h3{font-size:14px}.panel-title p{font-size:10px;color:var(--muted);margin-top:4px}
+.progress-layout{display:flex;align-items:center;gap:22px}
+.ring{--progress:0%;width:108px;height:108px;border-radius:50%;background:conic-gradient(var(--primary) var(--progress),var(--line) 0);display:grid;place-items:center;flex-shrink:0}
+.ring-inner{width:82px;height:82px;border-radius:50%;background:var(--surface);display:grid;place-content:center;text-align:center}
+.ring-inner strong{font-size:22px}.ring-inner span{font-size:9px;color:var(--muted);margin-top:3px}
+.progress-details{flex:1}.progress-details strong{font-size:13px}.progress-details p{font-size:11px;color:var(--muted);line-height:1.7;margin:7px 0 12px}
+.mini-progress{height:7px;background:var(--line);border-radius:10px;overflow:hidden}.mini-progress span{display:block;height:100%;width:0;background:var(--primary);border-radius:10px;transition:width .3s}
+.task-list{display:grid;gap:10px}
+.task-row{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid var(--line);border-radius:12px}
+.task-check{width:18px;height:18px;accent-color:var(--primary);flex-shrink:0}
+.task-info{min-width:0;flex:1}.task-info strong{display:block;font-size:11px;line-height:1.5}.task-info span{font-size:10px;color:var(--muted)}
+.task-row.done .task-info strong{text-decoration:line-through;color:var(--muted)}
+.task-row .status-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0}.task-row.done .status-dot{background:var(--green)}
+.quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.quick-card{border:1px solid var(--line);background:var(--surface);border-radius:15px;padding:17px;text-align:left;color:var(--text);box-shadow:var(--shadow);transition:.2s}
+.quick-card:hover{transform:translateY(-3px);border-color:var(--primary)}
+.quick-card .q-icon{font-size:21px;margin-bottom:12px;display:block}.quick-card strong{font-size:12px;display:block}.quick-card span{font-size:10px;color:var(--muted);display:block;margin-top:5px;line-height:1.5}
+.resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.subject-builder{margin:18px 0;padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}.subject-builder-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}.subject-builder-head h3{font-size:14px}.subject-builder-head p{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.6}.subject-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.subject-form-grid label{font-size:11px;font-weight:750;color:var(--muted)}.subject-form-grid input,.subject-form-grid select,.subject-form-grid textarea{display:block;width:100%;margin-top:6px;background:var(--surface-2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;font-size:12px}.subject-form-grid textarea{min-height:76px;resize:vertical}.subject-form-grid .wide{grid-column:1/-1}.custom-badge{font-size:9px;font-weight:800;letter-spacing:.5px;color:var(--primary);background:var(--surface-2);border-radius:6px;padding:5px 7px;display:inline-block;margin-bottom:8px}.subject-card-actions{display:flex;gap:8px;flex-wrap:wrap}.btn-danger-outline{border:1px solid #f0bdc4;color:#c53d52;background:transparent}.btn-danger-outline:hover{background:#fff0f2}
+.resource-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.resource-banner{padding:20px;color:white;background:linear-gradient(130deg,#344fca,#7d8eff);min-height:92px;display:flex;align-items:center;justify-content:space-between}
+.resource-banner.green{background:linear-gradient(130deg,#087e68,#4dc5a0)}.resource-banner.orange{background:linear-gradient(130deg,#b86b1c,#ffc16b)}.resource-banner.pink{background:linear-gradient(130deg,#a33b71,#f18ab1)}
+.resource-banner span{font-size:30px}.resource-banner small{font-size:10px;font-weight:800;letter-spacing:1px}
+.resource-body{padding:17px}.resource-body h3{font-size:13px;margin-bottom:7px}.resource-body p{font-size:11px;color:var(--muted);line-height:1.7;min-height:38px}.resource-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0;font-size:10px;color:var(--muted)}
+.study-progress{height:5px;background:var(--line);border-radius:8px;overflow:hidden;margin:12px 0}.study-progress span{display:block;height:100%;background:var(--green)}
+.page-intro{margin-bottom:21px}.page-intro h2{font-size:24px;letter-spacing:-.7px}.page-intro p{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.6}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0;flex-wrap:wrap}
+.toolbar input,.toolbar select,.form-control{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:12px}
+.toolbar input{min-width:210px}
+.clearance-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.clearance-item{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);padding:17px;border-radius:14px}
+.clearance-item input{width:19px;height:19px;accent-color:var(--primary);flex-shrink:0}
+.clearance-item label{font-size:12px;font-weight:700;flex:1;cursor:pointer}.clearance-item small{display:block;color:var(--muted);font-size:10px;font-weight:400;margin-top:5px}
+.clearance-item.checked{border-color:#8ed9b8;background:color-mix(in srgb,var(--surface) 92%,#17a66b 8%)}
+.empty{padding:35px;text-align:center;color:var(--muted);font-size:12px}
+.note-layout{display:grid;grid-template-columns:minmax(0,1fr) 1.2fr;gap:16px}
+.form-stack{display:grid;gap:12px}.form-stack label{font-size:11px;font-weight:750;color:var(--muted)}
+.form-stack input,.form-stack textarea,.form-stack select{width:100%;margin-top:6px}
+.form-stack textarea{resize:vertical;min-height:150px}
+.notes-list{display:grid;gap:10px}
+.note-card{padding:15px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.note-card h4{font-size:12px;margin-bottom:7px}.note-card p{font-size:11px;line-height:1.7;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+.note-card footer{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;font-size:10px;color:var(--muted)}
+.profile-grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:17px}
+.profile-card{text-align:center}.profile-large{height:76px;width:76px;margin:8px auto 14px;border-radius:25px;background:linear-gradient(135deg,#e0e7ff,#aab9ff);display:grid;place-items:center;font-size:26px;font-weight:900;color:#3449bb}
+.profile-card h3{font-size:16px}.profile-card p{font-size:11px;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
+.profile-card .pill{margin-top:13px}
+.profile-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.profile-fields .full{grid-column:1/-1}
+.field-label{display:block;font-size:10px;color:var(--muted);margin-bottom:6px}
+.field-value{font-size:12px;font-weight:650;overflow-wrap:anywhere}
+.notification-list{display:grid;gap:11px}
+.notification{display:flex;gap:13px;padding:15px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+.notification-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--surface-2);flex-shrink:0}
+.notification h4{font-size:12px;margin:2px 0 5px}.notification p{font-size:11px;color:var(--muted);line-height:1.6}
+footer.app-footer{padding:20px 34px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.toast{position:fixed;bottom:22px;right:22px;z-index:200;background:#162342;color:white;padding:13px 17px;border-radius:12px;font-size:12px;box-shadow:0 12px 30px #0003;opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s;max-width:min(360px,calc(100vw - 44px))}
+.toast.show{opacity:1;transform:translateY(0)}
+.auth-overlay{position:fixed;inset:0;z-index:100;background:linear-gradient(135deg,#101a35,#283e92 65%,#657bff);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-box{width:100%;max-width:420px;background:white;color:#18233d;padding:30px;border-radius:22px;box-shadow:0 25px 80px #0004}
+.auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:25px}.auth-brand .brand-mark{color:white;flex-shrink:0}.auth-brand h1{font-size:16px}.auth-brand p{font-size:11px;color:#73809b;margin-top:4px}
+.auth-box h2{font-size:23px;letter-spacing:-.6px;margin-bottom:7px}.auth-sub{font-size:12px;color:#73809b;margin-bottom:20px;line-height:1.6}
+.auth-tabs{display:flex;gap:6px;padding:5px;background:#f0f3fa;border-radius:12px;margin-bottom:15px}.auth-tabs button{flex:1;border:0;border-radius:9px;padding:10px;background:transparent;color:#66728e;font-size:12px;font-weight:750}.auth-tabs button.active{background:white;color:#2948be;box-shadow:0 2px 7px #0000000b}
+.auth-input{width:100%;padding:13px;margin:7px 0;border:1px solid #dfe4ef;border-radius:10px;background:#fff;color:#18233d;font-size:12px}
+.auth-submit{width:100%;margin-top:10px;padding:13px;border:0;border-radius:10px;background:#3559e0;color:white;font-size:12px;font-weight:800}
+.auth-error{display:none;color:#c62f49;background:#fff0f2;padding:10px;border-radius:9px;font-size:11px;margin-top:12px;line-height:1.5}
+.auth-success{color:#168354;font-size:11px;margin-top:10px;line-height:1.5}
+.auth-links{display:flex;justify-content:space-between;gap:10px;margin-top:15px;font-size:11px}.auth-links button{border:0;background:none;color:#3559e0;font-weight:750}
+.auth-foot{text-align:center;font-size:10px;color:#8993a8;margin-top:22px}
+.hidden{display:none!important}
+@media(max-width:1100px){.sidebar{width:220px}.main{margin-left:220px}.content{padding:23px}.topbar{padding:0 23px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:800px){.sidebar{transform:translateX(-100%);width:260px;box-shadow:15px 0 40px #0002}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu-btn{display:grid}.topbar{height:70px;padding:0 16px}.content{padding:18px 15px 30px}.search-box{width:min(230px,38vw)}.dashboard-grid{grid-template-columns:1fr}.welcome{padding:25px}.welcome-side{min-width:130px}.profile-grid{grid-template-columns:1fr}.note-layout{grid-template-columns:1fr}}
+@media(max-width:560px){.subject-form-grid{grid-template-columns:1fr}.subject-form-grid .wide{grid-column:auto}.subject-builder{padding:15px}.subject-builder-head{display:block}.topbar{gap:8px}.page-heading{font-size:15px}.crumb{display:none}.search-box{display:none}.top-actions{gap:6px}.icon-btn{width:35px;height:35px}.welcome{display:block;padding:24px 20px}.welcome h2{font-size:25px}.welcome-side{text-align:left;margin-top:23px}.big-date{font-size:19px}.stats-grid{gap:10px}.stat{padding:14px}.stat h4{font-size:23px}.stat-icon{height:32px;width:32px}.quick-grid{gap:9px}.quick-card{padding:13px}.resource-grid{grid-template-columns:1fr}.clearance-list{grid-template-columns:1fr}.profile-fields{grid-template-columns:1fr}.profile-fields .full{grid-column:auto}.section-head{align-items:start}.progress-layout{gap:13px}.ring{width:90px;height:90px}.ring-inner{width:69px;height:69px}.ring-inner strong{font-size:18px}.panel{padding:16px}.content{padding:14px 12px 25px}footer.app-footer{padding:18px 15px}.toolbar input{width:100%;min-width:0}.toolbar{align-items:stretch}.auth-box{padding:24px}.auth-links{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      <div><h1>IMSU ACTUARIAL</h1><p>STUDENT SUCCESS HUB</p></div>
+    </div>
+    <div class="nav-label">Workspace</div>
+    <button class="nav-link active" data-view="dashboard"><span class="nav-icon">▦</span> Dashboard</button>
+    <button class="nav-link" data-view="clearance"><span class="nav-icon">☑</span> Clearance tracker</button>
+    <button class="nav-link" data-view="study"><span class="nav-icon">▤</span> Study centre</button>
+    <button class="nav-link" data-view="notes"><span class="nav-icon">✎</span> My notes</button>
+    <button class="nav-link" data-view="notifications"><span class="nav-icon">♧</span> Notifications</button>
+    <div class="nav-label" style="margin-top:16px">Account</div>
+    <button class="nav-link" data-view="profile"><span class="nav-icon">◎</span> My profile</button>
+    <div class="side-bottom">
+      <div class="help-card"><strong>Need a hand?</strong><p>Keep your requirements organised and your study goals on track.</p><a href="mailto:student.support@example.com">Contact support ↗</a></div>
+      <button class="nav-link" id="sidebarLogout"><span class="nav-icon">↪</span> Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open navigation">☰</button>
+        <div><div class="page-heading" id="pageHeading">Your dashboard</div><div class="crumb">IMSU Actuarial Hub / <span id="crumbName">Overview</span></div></div>
+      </div>
+      <div class="top-actions">
+        <label class="search-box"><span class="search-symbol">⌕</span><input id="globalSearch" type="search" placeholder="Search this portal..." aria-label="Search portal"></label>
+        <button class="icon-btn" id="themeBtn" title="Toggle light and dark mode" aria-label="Toggle theme">☾</button>
+        <button class="icon-btn" id="notificationBtn" title="Notifications" aria-label="Open notifications">♧<span class="dot"></span></button>
+        <button class="avatar" id="avatarBtn" title="My profile">NA</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="view active" id="view-dashboard">
+        <div class="welcome">
+          <div class="welcome-copy">
+            <div class="eyebrow">YOUR STUDENT SPACE</div>
+            <h2 id="welcomeTitle">Welcome back 👋</h2>
+            <p>Your academic journey, clearance checklist and study goals — organised in one calm, focused space.</p>
+            <button class="btn btn-light" style="margin-top:20px" data-goto="clearance">Continue clearance <span>→</span></button>
+          </div>
+          <div class="welcome-side"><div class="date-label">TODAY</div><div class="big-date" id="todayDate">Loading date…</div><span class="pill">✦ One step at a time</span></div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat"><div class="stat-top"><span class="stat-icon">☑</span><span class="pill blue">Checklist</span></div><h4 id="statClearance">0%</h4><p>Clearance completed</p><div class="stat-foot" id="statClearanceFoot">0 of 6 requirements</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-icon green">▤</span><span class="pill">Learning</span></div><h4 id="statStudy">0/4</h4><p>Study topics completed</p><div class="stat-foot">Build your learning streak</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-icon orange">✎</span><span class="pill amber">Personal</span></div><h4 id="statNotes">0</h4><p>Saved study notes</p><div class="stat-foot">Your notes stay in your account</div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-icon pink">✦</span><span class="pill gray">Focus</span></div><h4 id="statTasks">0</h4><p>Items left to complete</p><div class="stat-foot">Small steps make progress</div></article>
+        </div>
+
+        <div class="section-head"><div><h3>Your overview</h3><p>A quick look at what needs your attention.</p></div><button class="btn btn-outline btn-small" data-goto="profile">View profile ↗</button></div>
+        <div class="dashboard-grid">
+          <article class="panel">
+            <div class="panel-title"><div><h3>Clearance progress</h3><p>Your checklist at a glance</p></div><span class="pill blue" id="clearancePill">In progress</span></div>
+            <div class="progress-layout">
+              <div class="ring" id="progressRing" style="--progress:0%"><div class="ring-inner"><strong id="ringPercent">0%</strong><span>COMPLETED</span></div></div>
+              <div class="progress-details"><strong id="clearanceSummary">Let's get started</strong><p id="clearanceSummaryText">Mark requirements as you complete them. Your progress is saved to your account.</p><div class="mini-progress"><span id="miniProgress"></span></div><button class="btn btn-primary btn-small" style="margin-top:14px" data-goto="clearance">Open checklist →</button></div>
+            </div>
+          </article>
+          <article class="panel">
+            <div class="panel-title"><div><h3>Study checklist</h3><p>Keep your learning moving</p></div><button class="btn btn-soft btn-small" data-goto="study">See all</button></div>
+            <div class="task-list" id="dashboardStudyList"></div>
+          </article>
+        </div>
+
+        <div class="section-head"><div><h3>Quick access</h3><p>Jump straight into your most-used tools.</p></div></div>
+        <div class="quick-grid">
+          <button class="quick-card" data-goto="clearance"><span class="q-icon">☑</span><strong>Clearance tracker</strong><span>Update your requirements</span></button>
+          <button class="quick-card" data-goto="study"><span class="q-icon">📚</span><strong>Study centre</strong><span>Review actuarial subjects</span></button>
+          <button class="quick-card" data-goto="notes"><span class="q-icon">📝</span><strong>My notes</strong><span>Write and save reminders</span></button>
+          <button class="quick-card" data-goto="profile"><span class="q-icon">👤</span><strong>My profile</strong><span>View your account details</span></button>
+        </div>
+      </section>
+
+      <section class="view" id="view-clearance">
+        <div class="page-intro"><h2>Clearance tracker</h2><p>Keep your requirements organised. Your changes sync with your account when Firestore is configured.</p></div>
+        <article class="panel">
+          <div class="panel-title"><div><h3>Clearance checklist</h3><p id="clearanceCount">0 of 6 completed</p></div><span class="pill blue" id="clearancePercentLabel">0% complete</span></div>
+          <div class="mini-progress" style="height:9px;margin-bottom:20px"><span id="clearancePageProgress"></span></div>
+          <div class="toolbar"><input id="clearanceSearch" type="search" placeholder="Find a requirement…" aria-label="Filter clearance requirements"><select id="clearanceFilter" aria-label="Filter by status"><option value="all">All requirements</option><option value="pending">Pending</option><option value="done">Completed</option></select><button class="btn btn-outline btn-small" id="resetClearance">Reset checklist</button></div>
+          <div class="clearance-list" id="clearanceList"></div>
+          <p style="font-size:10px;color:var(--muted);margin-top:17px">This is a personal tracker, not official confirmation of university clearance.</p>
+        </article>
+      </section>
+
+      <section class="view" id="view-study">
+        <div class="page-intro"><h2>Study centre</h2><p>A focused space for your Insurance and Actuarial Science learning goals.</p></div>
+        <div class="stats-grid" style="margin:0 0 18px;grid-template-columns:repeat(2,minmax(0,1fr))">
+          <article class="stat"><div class="stat-top"><span class="stat-icon green">✓</span><span class="pill">Your progress</span></div><h4 id="studyProgressTitle">0 of 4</h4><p>Topics completed</p><div class="mini-progress" style="margin-top:14px"><span id="studyPageProgress"></span></div></article>
+          <article class="stat"><div class="stat-top"><span class="stat-icon orange">🎯</span><span class="pill amber">Goal</span></div><h4>20 min</h4><p>Suggested daily focused study</p><div class="stat-foot">Consistency beats cramming</div></article>
+        </div>
+        <article class="subject-builder">
+          <div class="subject-builder-head"><div><h3>＋ Add your own subject</h3><p>Create a subject or course you are studying. Your custom subjects are saved privately to your signed-in account and will be available when you sign in again.</p></div><span class="pill blue">Personal library</span></div>
+          <form id="subjectForm" class="subject-form-grid">
+            <label class="wide">IMSU faculty / school
+              <select id="subjectFaculty" required>
+                <option value="">Choose your faculty</option>
+              </select>
+            </label>
+            <label class="wide">Your course of study
+              <select id="subjectProgramme" required disabled>
+                <option value="">Choose a faculty first</option>
+              </select>
+            </label>
+            <label class="wide">Choose a suggested subject / course topic
+              <select id="subjectPreset" disabled>
+                <option value="">Choose your course first (optional)</option>
+              </select>
+              <small style="display:block;margin-top:6px;color:var(--muted);font-size:10px;line-height:1.6">Selecting a suggestion fills in the subject name and description. You can still edit them or enter a subject of your own.</small>
+            </label>
+            <label>Subject name<input id="subjectTitle" maxlength="80" placeholder="Choose a suggestion or type your own" required></label>
+            <label>Category<select id="subjectCategory"><option>General</option><option>Actuarial Mathematics</option><option>Insurance</option><option>Statistics</option><option>Economics</option><option>Accounting</option><option>Finance</option><option>Computer Science</option><option>Law</option><option>Engineering</option><option>Health Sciences</option><option>Education</option><option>Arts & Humanities</option><option>Agriculture</option><option>Other</option></select></label>
+            <label class="wide">Short description<textarea id="subjectDescription" maxlength="500" placeholder="What will you learn in this subject?" required></textarea></label>
+            <div class="wide"><button class="btn btn-primary" id="addSubjectBtn" type="submit">＋ Save subject</button></div>
+          </form>
+          <p style="font-size:10px;line-height:1.7;color:var(--muted);margin-top:12px">Programme options are compiled from publicly available IMSU faculty/admission information. Suggested subjects are study prompts, not an official semester-by-semester course list; confirm your registered courses with your department or course adviser.</p>
+        </article>
+        <div class="toolbar"><input id="studySearch" type="search" placeholder="Search study topics…" aria-label="Search study topics"><select id="studyFilter" aria-label="Filter study topics"><option value="all">All topics</option><option value="pending">Not completed</option><option value="done">Completed</option></select></div>
+        <div class="resource-grid" id="studyGrid"></div>
+        <article class="panel" style="margin-top:17px"><div class="panel-title"><div><h3>Study tip</h3><p>Try active recall</p></div><span class="stat-icon orange">💡</span></div><p style="font-size:12px;line-height:1.8;color:var(--muted)">After reading a topic, close your notes and explain the main ideas from memory. Then revisit the parts you missed. This is a practical way to identify what you truly understand.</p></article>
+      </section>
+
+      <section class="view" id="view-notes">
+        <div class="page-intro"><h2>My notes</h2><p>Save your own revision notes, ideas and study reminders in one place.</p></div>
+        <div class="note-layout">
+          <article class="panel"><div class="panel-title"><div><h3 id="noteFormTitle">Create a note</h3><p>Keep your revision material organised.</p></div><span class="stat-icon orange">✎</span></div>
+            <form class="form-stack" id="noteForm">
+              <label>Note title<input class="form-control" id="noteTitle" maxlength="100" placeholder="e.g. Expected value formulas" required></label>
+              <label>Category<select class="form-control" id="noteCategory"><option>Actuarial Mathematics</option><option>Insurance</option><option>Statistics</option><option>Exam reminder</option><option>General</option></select></label>
+              <label>Note<textarea class="form-control" id="noteBody" maxlength="10000" placeholder="Write your key points here…" required></textarea></label>
+              <div style="display:flex;gap:9px;flex-wrap:wrap"><button class="btn btn-primary" type="submit" id="saveNoteBtn">Save note</button><button class="btn btn-outline hidden" type="button" id="cancelEdit">Cancel edit</button></div>
+            </form>
+          </article>
+          <article class="panel"><div class="panel-title"><div><h3>Your saved notes</h3><p id="notesSubtitle">Notes saved to your account</p></div><span class="pill blue" id="notesBadge">0 notes</span></div><div class="notes-list" id="notesList"><div class="empty">Your saved notes will appear here.</div></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-notifications">
+        <div class="page-intro"><h2>Notifications & reminders</h2><p>Helpful prompts to keep your student tasks on track. These are general reminders, not official IMSU announcements.</p></div>
+        <div class="notification-list">
+          <article class="notification"><div class="notification-icon">☑</div><div><h4>Keep your clearance tracker updated</h4><p>Review your requirements regularly and only mark an item complete when you have completed it.</p></div></article>
+          <article class="notification"><div class="notification-icon">📚</div><div><h4>Schedule a short study session</h4><p>Choose one topic, study for 20 focused minutes and write down what you learned.</p></div></article>
+          <article class="notification"><div class="notification-icon">📝</div><div><h4>Save important revision notes</h4><p>Use My Notes to keep formulas, definitions and exam reminders together.</p></div></article>
+          <article class="notification"><div class="notification-icon">🔒</div><div><h4>Protect your account</h4><p>Use a unique password and never share your login details with another student.</p></div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-profile">
+        <div class="page-intro"><h2>My profile</h2><p>Your account details and personal portal overview.</p></div>
+        <div class="profile-grid">
+          <article class="panel profile-card"><div class="profile-large" id="profileInitials">NA</div><h3 id="profileName">Student</h3><p id="profileEmail">Not signed in</p><span class="pill blue">Student account</span><div style="margin-top:19px"><button class="btn btn-outline btn-small" id="resetPasswordBtn">Send password reset</button></div></article>
+          <article class="panel"><div class="panel-title"><div><h3>Account information</h3><p>Details linked to your Firebase sign-in.</p></div></div><div class="profile-fields"><div><span class="field-label">Account email</span><div class="field-value" id="profileEmailField">—</div></div><div><span class="field-label">Account status</span><div class="field-value">Authenticated</div></div><div><span class="field-label">Clearance progress</span><div class="field-value" id="profileClearance">0%</div></div><div><span class="field-label">Study topics completed</span><div class="field-value" id="profileStudy">0 of 4</div></div><div class="full"><span class="field-label">Account ID</span><div class="field-value" id="profileUid" style="font-size:10px;color:var(--muted)">—</div></div></div><div style="border-top:1px solid var(--line);margin-top:22px;padding-top:18px"><button class="btn btn-danger btn-small" id="profileLogout">Sign out</button></div></article>
+        </div>
+      </section>
+    </main>
+    <footer class="app-footer"><span>© <span id="year"></span> IMSU Actuarial Hub</span><span>Built for organisation, learning and student success.</span></footer>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Firebase authentication screen -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-brand"><div class="brand-mark">A</div><div><h1>IMSU ACTUARIAL HUB</h1><p>STUDENT SUCCESS PORTAL</p></div></div>
+    <h2 id="authTitle">Welcome back</h2><p class="auth-sub" id="authDescription">Sign in to continue to your personal student dashboard.</p>
+    <div class="auth-tabs"><button class="active" id="loginTab" type="button">Sign in</button><button id="signupTab" type="button">Create account</button></div>
+    <form id="authForm">
+      <input class="auth-input" id="authEmail" type="email" placeholder="Email address" autocomplete="email" required>
+      <input class="auth-input" id="authPassword" type="password" placeholder="Password (minimum 6 characters)" minlength="6" autocomplete="current-password" required>
+      <button class="auth-submit" id="authSubmit" type="submit">Sign in securely →</button>
+    </form>
+    <div class="auth-error" id="authError" role="alert"></div><div class="auth-success" id="authSuccess" role="status"></div>
+    <div class="auth-links"><button type="button" id="forgotPassword">Forgot password?</button><span>Secure sign-in powered by Firebase</span></div>
+    <div class="auth-foot">Use your own account. Your personal notes and progress are private to your sign-in.</div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, onSnapshot, collection,
+  addDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+/* Keep your existing Firebase project settings here. */
+const firebaseConfig = {
+  apiKey: "AIzaSyC4GKcgvTMQ2s8ewmCl0X9-6VPBz0eyTrA",
+  authDomain: "imsu-hub.firebaseapp.com",
+  databaseURL: "https://imsu-hub-default-rtdb.firebaseio.com",
+  projectId: "imsu-hub",
+  storageBucket: "imsu-hub.firebasestorage.app",
+  messagingSenderId: "851739593084",
+  appId: "1:851739593084:web:ea7be3cf15345ea14e7cf9"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const clearanceItems = [
+  {id:"jamb", title:"JAMB CAPS acceptance", desc:"Confirm your admission status and acceptance."},
+  {id:"acceptance", title:"Acceptance fee", desc:"Check your payment status and keep your receipt."},
+  {id:"olevel", title:"O’level result upload", desc:"Confirm that your result upload is complete."},
+  {id:"screening", title:"Departmental screening", desc:"Review any screening requirements that apply to you."},
+  {id:"fees", title:"School fees", desc:"Check your school-fee payment status."},
+  {id:"matric", title:"Matriculation number", desc:"Record this once it has officially been issued."}
+];
+const studyItems = [
+  {id:"maths",title:"Mathematics for Actuaries",category:"Actuarial Mathematics",icon:"∑",color:"",description:"Build your foundation in mathematical methods, probability and financial calculations.",level:"Core subject",duration:"20–30 min"},
+  {id:"insurance",title:"Principles of Insurance",category:"Insurance",icon:"◇",color:"green",description:"Explore risk pooling, indemnity, insurance contracts and the principles of insurance.",level:"Core subject",duration:"20–30 min"},
+  {id:"statistics",title:"Probability & Statistics",category:"Statistics",icon:"▥",color:"orange",description:"Review random variables, distributions, expectation and statistical inference.",level:"Core subject",duration:"20–30 min"},
+  {id:"finance",title:"Financial Mathematics",category:"Actuarial Mathematics",icon:"₦",color:"pink",description:"Practise interest, discounting, annuities and the time value of money.",level:"Core subject",duration:"20–30 min"}
+];
+let currentUser=null, authMode="login", clearanceData={}, studyData={}, notesData=[], customSubjects=[];
+let stopClearance=null, stopStudy=null, stopNotes=null, stopSubjects=null, editingNoteId=null, toastTimer=null;
+
+const $ = id => document.getElementById(id);
+const safeText = value => String(value ?? "");
+function showToast(message){
+  $("toast").textContent=message;$("toast").classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),3000);
+}
+function friendlyError(error){
+  const messages={
+    "auth/invalid-email":"Please enter a valid email address.",
+    "auth/invalid-credential":"Email or password is incorrect.",
+    "auth/user-not-found":"No account found for this email. Create an account first.",
+    "auth/wrong-password":"The password is incorrect.",
+    "auth/email-already-in-use":"This email already has an account. Try signing in.",
+    "auth/weak-password":"Choose a stronger password with at least 6 characters.",
+    "auth/too-many-requests":"Too many attempts. Wait a little and try again.",
+    "auth/network-request-failed":"Network error. Check your internet connection.",
+    "permission-denied":"Database access was denied. Check your Firestore security rules.",
+    "unavailable":"Firebase is temporarily unavailable. Please try again."
+  };
+  return messages[error?.code] || error?.message || "Something went wrong. Please try again.";
+}
+function setAuthMode(mode){
+  authMode=mode;
+  $("loginTab").classList.toggle("active",mode==="login");
+  $("signupTab").classList.toggle("active",mode==="signup");
+  $("authTitle").textContent=mode==="login"?"Welcome back":"Create your student account";
+  $("authDescription").textContent=mode==="login"?"Sign in to continue to your personal student dashboard.":"Create an account to save your clearance progress and study notes.";
+  $("authSubmit").textContent=mode==="login"?"Sign in securely →":"Create account →";
+  $("authPassword").autocomplete=mode==="login"?"current-password":"new-password";
+  $("authError").style.display="none";$("authSuccess").textContent="";
+}
+$("loginTab").addEventListener("click",()=>setAuthMode("login"));
+$("signupTab").addEventListener("click",()=>setAuthMode("signup"));
+$("authForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  const email=$("authEmail").value.trim(), password=$("authPassword").value;
+  $("authError").style.display="none";$("authSuccess").textContent="";
+  $("authSubmit").disabled=true;$("authSubmit").textContent="Please wait…";
+  try{
+    if(authMode==="signup"){
+      const credential=await createUserWithEmailAndPassword(auth,email,password);
+      const displayName=email.split("@")[0];
+      try{await updateProfile(credential.user,{displayName});}catch(_){}
+      $("authSuccess").textContent="Account created. Opening your dashboard…";
+    }else{
+      await signInWithEmailAndPassword(auth,email,password);
+    }
+  }catch(error){$("authError").textContent=friendlyError(error);$("authError").style.display="block";}
+  finally{$("authSubmit").disabled=false;$("authSubmit").textContent=authMode==="login"?"Sign in securely →":"Create account →";}
+});
+async function resetPassword(email){
+  if(!email){showToast("Enter your email address first.");$("authEmail").focus();return;}
+  try{await sendPasswordResetEmail(auth,email);showToast("Password reset email sent. Check your inbox.");}
+  catch(error){showToast(friendlyError(error));}
+}
+$("forgotPassword").addEventListener("click",()=>resetPassword($("authEmail").value.trim()));
+$("resetPasswordBtn").addEventListener("click",()=>resetPassword(currentUser?.email||""));
+
+function stopListeners(){
+  [stopClearance,stopStudy,stopNotes,stopSubjects].forEach(fn=>{if(fn)fn();});
+  stopClearance=stopStudy=stopNotes=stopSubjects=null;
+}
+function getUserDoc(section){return doc(db,section,currentUser.uid);}
+function navigate(view){
+  const names={dashboard:"Your dashboard",clearance:"Clearance tracker",study:"Study centre",notes:"My notes",notifications:"Notifications",profile:"My profile"};
+  if(!$("view-"+view))return;
+  document.querySelectorAll(".view").forEach(el=>el.classList.toggle("active",el.id==="view-"+view));
+  document.querySelectorAll(".nav-link[data-view]").forEach(el=>el.classList.toggle("active",el.dataset.view===view));
+  $("pageHeading").textContent=names[view]||"Student portal";
+  $("crumbName").textContent=names[view]||"Overview";
+  $("sidebar").classList.remove("open");
+  if(view==="profile")renderProfile();
+  if(view==="notes")renderNotes();
+}
+document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>navigate(button.dataset.view)));
+document.querySelectorAll("[data-goto]").forEach(button=>button.addEventListener("click",()=>navigate(button.dataset.goto)));
+$("avatarBtn").addEventListener("click",()=>navigate("profile"));
+$("notificationBtn").addEventListener("click",()=>navigate("notifications"));
+$("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+$("sidebarLogout").addEventListener("click",logout);
+$("profileLogout").addEventListener("click",logout);
+async function logout(){try{await signOut(auth);}catch(error){showToast(friendlyError(error));}}
+
+$("themeBtn").addEventListener("click",()=>{
+  document.body.classList.toggle("dark");
+  const dark=document.body.classList.contains("dark");
+  $("themeBtn").textContent=dark?"☀":"☾";
+  $("themeBtn").title=dark?"Switch to light mode":"Switch to dark mode";
+  try{localStorage.setItem("imsu-theme",dark?"dark":"light");}catch(_){}
+});
+try{if(localStorage.getItem("imsu-theme")==="dark"){document.body.classList.add("dark");$("themeBtn").textContent="☀";}}catch(_){}
+$("todayDate").textContent=new Intl.DateTimeFormat("en-NG",{day:"numeric",month:"short",year:"numeric"}).format(new Date());
+$("year").textContent=new Date().getFullYear();
+
+onAuthStateChanged(auth,async user=>{
+  stopListeners();currentUser=user;clearanceData={};studyData={};notesData=[];customSubjects=[];
+  if(!user){
+    $("authOverlay").classList.remove("hidden");
+    renderAll();return;
+  }
+  $("authOverlay").classList.add("hidden");
+  const label=user.displayName||user.email?.split("@")[0]||"Student";
+  $("welcomeTitle").textContent=`Welcome back, ${label} 👋`;
+  $("avatarBtn").textContent=initials(label);
+  $("profileInitials").textContent=initials(label);
+  $("profileName").textContent=label;
+  $("profileEmail").textContent=user.email||"";
+  $("profileEmailField").textContent=user.email||"—";
+  $("profileUid").textContent=user.uid;
+  try{
+    const profileRef=getUserDoc("profiles");
+    const snap=await getDoc(profileRef);
+    if(!snap.exists())await setDoc(profileRef,{email:user.email||"",displayName:label,createdAt:serverTimestamp()},{merge:true});
+  }catch(error){console.warn("Profile setup:",error);}
+  subscribeClearance();subscribeStudy();subscribeNotes();subscribeSubjects();
+});
+function initials(value){return safeText(value).split(/[\s.@_-]+/).filter(Boolean).slice(0,2).map(s=>s[0].toUpperCase()).join("")||"ST";}
+
+function subscribeClearance(){
+  stopClearance=onSnapshot(getUserDoc("clearance"),snap=>{
+    clearanceData=snap.exists()?snap.data():{};renderClearance();renderDashboard();
+  },error=>showToast("Clearance sync: "+friendlyError(error)));
+}
+function subscribeStudy(){
+  stopStudy=onSnapshot(getUserDoc("studyProgress"),snap=>{
+    studyData=snap.exists()?snap.data():{};renderStudy();renderDashboard();
+  },error=>showToast("Study sync: "+friendlyError(error)));
+}
+function subscribeSubjects(){
+  const subjectsQuery=query(collection(db,"users",currentUser.uid,"subjects"),orderBy("createdAt","desc"));
+  stopSubjects=onSnapshot(subjectsQuery,snap=>{
+    customSubjects=snap.docs.map(d=>({id:d.id,...d.data(),isCustom:true}));
+    renderStudy();renderDashboard();
+  },error=>{console.warn(error);showToast("Subject sync: "+friendlyError(error));});
+}
+function allStudyItems(){return [...studyItems,...customSubjects];}
+function subscribeNotes(){
+  const notesQuery=query(collection(db,"users",currentUser.uid,"notes"),orderBy("updatedAt","desc"));
+  stopNotes=onSnapshot(notesQuery,snap=>{
+    notesData=snap.docs.map(d=>({id:d.id,...d.data()}));renderNotes();renderDashboard();
+  },error=>{
+    console.warn(error);showToast("Notes sync: "+friendlyError(error));
+  });
+}
+async function saveUserField(collectionName,field,value){
+  if(!currentUser)throw new Error("Please sign in again.");
+  await setDoc(getUserDoc(collectionName),{[field]:value,updatedAt:serverTimestamp()},{merge:true});
+}
+function isClearanceDone(id){return clearanceData[id]===true;}
+function isStudyDone(id){return studyData[id]===true;}
+function renderDashboard(){
+  const clearanceDone=clearanceItems.filter(item=>isClearanceDone(item.id)).length;
+  const clearancePercent=Math.round(clearanceDone/clearanceItems.length*100);
+  const allSubjects=allStudyItems();
+  const studyDone=allSubjects.filter(item=>isStudyDone(item.id)).length;
+  $("statClearance").textContent=clearancePercent+"%";
+  $("statClearanceFoot").textContent=`${clearanceDone} of ${clearanceItems.length} requirements`;
+  $("statStudy").textContent=`${studyDone}/${allSubjects.length}`;
+  $("statNotes").textContent=notesData.length;
+  $("statTasks").textContent=(clearanceItems.length-clearanceDone)+(allSubjects.length-studyDone);
+  $("progressRing").style.setProperty("--progress",clearancePercent+"%");
+  $("ringPercent").textContent=clearancePercent+"%";
+  $("miniProgress").style.width=clearancePercent+"%";
+  $("clearancePill").textContent=clearancePercent===100?"All complete":clearancePercent===0?"Not started":"In progress";
+  $("clearanceSummary").textContent=clearancePercent===100?"Great work — checklist complete!":clearancePercent===0?"Let's get started":`${clearanceDone} of ${clearanceItems.length} requirements completed`;
+  $("clearanceSummaryText").textContent=clearancePercent===100?"You have marked all listed items complete. Verify official status with the university.":"Keep your checklist updated as you complete each requirement.";
+  $("dashboardStudyList").innerHTML=allSubjects.slice(0,3).map(item=>`<div class="task-row ${isStudyDone(item.id)?"done":""}"><input class="task-check" type="checkbox" data-study-toggle="${escapeHTML(item.id)}" ${isStudyDone(item.id)?"checked":""} aria-label="Complete ${escapeHTML(item.title)}"><div class="task-info"><strong>${escapeHTML(item.title)}</strong><span>${isStudyDone(item.id)?"Completed":"Study topic"}</span></div><span class="status-dot"></span></div>`).join("");
+  $("dashboardStudyList").querySelectorAll("[data-study-toggle]").forEach(input=>input.addEventListener("change",()=>toggleStudy(input.dataset.studyToggle,input.checked)));
+  $("profileClearance").textContent=clearancePercent+"%";
+  $("profileStudy").textContent=`${studyDone} of ${allSubjects.length}`;
+}
+function renderClearance(){
+  const search=$("clearanceSearch").value.toLowerCase(),filter=$("clearanceFilter").value;
+  const done=clearanceItems.filter(item=>isClearanceDone(item.id)).length;
+  const percent=Math.round(done/clearanceItems.length*100);
+  $("clearanceCount").textContent=`${done} of ${clearanceItems.length} completed`;
+  $("clearancePercentLabel").textContent=percent+"% complete";
+  $("clearancePageProgress").style.width=percent+"%";
+  const visible=clearanceItems.filter(item=>(item.title+" "+item.desc).toLowerCase().includes(search)&&(filter==="all"||(filter==="done"&&isClearanceDone(item.id))||(filter==="pending"&&!isClearanceDone(item.id))));
+  $("clearanceList").innerHTML=visible.length?visible.map(item=>`<article class="clearance-item ${isClearanceDone(item.id)?"checked":""}"><input type="checkbox" id="c-${item.id}" data-clearance-toggle="${item.id}" ${isClearanceDone(item.id)?"checked":""}><label for="c-${item.id}">${item.title}<small>${item.desc}</small></label><span class="pill ${isClearanceDone(item.id)?"":"amber"}">${isClearanceDone(item.id)?"Done":"Pending"}</span></article>`).join(""):`<div class="empty" style="grid-column:1/-1">No requirements match your filters.</div>`;
+  $("clearanceList").querySelectorAll("[data-clearance-toggle]").forEach(input=>input.addEventListener("change",async()=>{
+    const id=input.dataset.clearanceToggle;input.disabled=true;
+    try{await saveUserField("clearance",id,input.checked);showToast("Clearance progress saved.");}
+    catch(error){input.checked=!input.checked;showToast(friendlyError(error));}
+    finally{input.disabled=false;}
+  }));
+}
+$("clearanceSearch").addEventListener("input",renderClearance);
+$("clearanceFilter").addEventListener("change",renderClearance);
+$("resetClearance").addEventListener("click",async()=>{
+  if(!currentUser)return;
+  if(!confirm("Reset all clearance items? This cannot be undone."))return;
+  try{const values={};clearanceItems.forEach(item=>values[item.id]=false);await setDoc(getUserDoc("clearance"),values,{merge:true});showToast("Clearance checklist reset.");}
+  catch(error){showToast(friendlyError(error));}
+});
+
+function renderStudy(){
+  const search=$("studySearch").value.toLowerCase(),filter=$("studyFilter").value;
+  const subjects=allStudyItems();
+  const done=subjects.filter(item=>isStudyDone(item.id)).length;
+  $("studyProgressTitle").textContent=`${done} of ${subjects.length}`;
+  $("studyPageProgress").style.width=(subjects.length?done/subjects.length*100:0)+"%";
+  const visible=subjects.filter(item=>(item.title+" "+item.description+" "+item.category).toLowerCase().includes(search)&&(filter==="all"||(filter==="done"&&isStudyDone(item.id))||(filter==="pending"&&!isStudyDone(item.id))));
+  $("studyGrid").innerHTML=visible.length?visible.map(item=>{
+    const id=escapeHTML(item.id),title=escapeHTML(item.title),category=escapeHTML(item.category||"General"),description=escapeHTML(item.description||""),icon=item.isCustom?"✦":(item.icon||"📘");
+    return `<article class="resource-card"><div class="resource-banner ${item.isCustom?"pink":(item.color||"")}"><div><small>${category.toUpperCase()}</small><h3 style="margin-top:8px;font-size:16px">${title}</h3></div><span>${icon}</span></div><div class="resource-body">${item.isCustom?'<span class="custom-badge">YOUR SUBJECT</span>':""}<h3>${title}</h3><p>${description}</p><div class="resource-meta"><span>${item.isCustom?"Custom subject":(item.duration||"20–30 min")}</span><span>${isStudyDone(item.id)?"✓ Completed":"In progress"}</span></div><div class="study-progress"><span style="width:${isStudyDone(item.id)?100:0}%"></span></div><div class="subject-card-actions"><button class="btn ${isStudyDone(item.id)?"btn-outline":"btn-primary"} btn-small" data-study-complete="${id}">${isStudyDone(item.id)?"Mark as not done":"Mark completed"}</button>${item.isCustom?`<button class="btn btn-danger-outline btn-small" data-subject-delete="${id}">Delete</button>`:""}</div></div></article>`;
+  }).join(""):`<div class="empty" style="grid-column:1/-1">No study topics match your search. Add a subject above to build your own library.</div>`;
+  $("studyGrid").querySelectorAll("[data-study-complete]").forEach(button=>button.addEventListener("click",()=>toggleStudy(button.dataset.studyComplete,!isStudyDone(button.dataset.studyComplete))));
+  $("studyGrid").querySelectorAll("[data-subject-delete]").forEach(button=>button.addEventListener("click",()=>deleteCustomSubject(button.dataset.subjectDelete)));
+}
+// IMSU programmes compiled from publicly available faculty and admissions pages.
+// The subject suggestions below are starter topics, not an official course outline.
+const IMSU_PROGRAMMES = {
+  "Agriculture and Veterinary Medicine": ["Agricultural Economics, Extension & Rural Development","Animal Science and Fisheries","Crop Science and Biotechnology","Food Science and Technology","Soil Science and Environment"],
+  "Basic Medical Sciences": ["Human Anatomy","Human Physiology","Medical Biochemistry"],
+  "Education": ["Education Accounting","Education Biology","Education Chemistry","Education Economics","Education English","Education French","Education Geography","Education Government","Education History","Education Igbo","Education Mathematics","Education Physics","Education Political Science","Education Religion","Education Social Studies","Guidance and Counselling","Library and Information Science","Educational Administration"],
+  "Engineering": ["Agricultural Engineering","Chemical Engineering","Civil Engineering","Computer Engineering","Electrical/Electronic Engineering","Mechanical Engineering","Petroleum and Gas Engineering"],
+  "Environmental Sciences": ["Architecture","Building","Environmental Management","Estate Management","Fine and Applied Arts","Geography and Environmental Management","Quantity Surveying","Surveying and Geoinformatics","Urban and Regional Planning"],
+  "Health Sciences": ["Nutrition and Dietetics","Public Health"],
+  "Humanities": ["English Language and Literary Studies","French","History and International Studies","Linguistics","Linguistics and Igbo","Philosophy","Religious Studies","Theatre Arts"],
+  "Law": ["Law"],
+  "Management Sciences": ["Accountancy","Banking and Finance","Hospitality and Tourism Management","Insurance and Actuarial Sciences","Management","Marketing"],
+  "Physical Sciences": ["Chemistry/Industrial Chemistry","Computer Science","Industrial Physics","Mathematics","Physics","Statistics"],
+  "Biological Sciences": ["Animal and Environmental Biology","Biochemistry","Microbiology/Industrial Microbiology","Plant Science and Biotechnology"],
+  "Social Sciences": ["Economics","Mass Communication","Political Science","Psychology","Public Administration","Sociology"],
+  "College of Medicine": ["Medicine and Surgery"]
+};
+
+const SUBJECT_SUGGESTIONS = {
+  "Insurance and Actuarial Sciences": [
+    ["Principles of Insurance","Insurance","Introduction to risk, indemnity, insurable interest and insurance contracts."],
+    ["Actuarial Mathematics","Actuarial Mathematics","Mathematical models used to measure and manage financial risk."],
+    ["Probability Theory","Statistics","Probability rules, random variables and probability distributions."],
+    ["Statistics for Actuaries","Statistics","Descriptive statistics, estimation, hypothesis testing and inference."],
+    ["Financial Mathematics","Finance","Interest rates, discounting, annuities and cash-flow valuation."],
+    ["Life Contingencies","Actuarial Mathematics","Survival models, life tables and life insurance calculations."],
+    ["Risk Management","Insurance","Risk identification, measurement, mitigation and control."],
+    ["Economics","Economics","Demand, supply, markets, inflation and economic policy."],
+    ["Accounting","Accounting","Financial statements, transactions and accounting principles."]
+  ],
+  "Accountancy": [["Financial Accounting","Accounting","Recording transactions and preparing financial statements."],["Cost Accounting","Accounting","Cost classification, costing methods and cost control."],["Auditing","Accounting","Audit procedures, evidence and professional responsibilities."],["Taxation","Accounting","Tax principles, tax computation and compliance."],["Business Finance","Finance","Financial decisions, investment and working capital."]],
+  "Banking and Finance": [["Financial Management","Finance","Financial planning, capital budgeting and financing decisions."],["Money and Banking","Finance","Financial institutions, monetary policy and banking operations."],["Investment Analysis","Finance","Risk, return, portfolio basics and security valuation."],["Financial Accounting","Accounting","Preparing and interpreting financial statements."],["Economics","Economics","Markets, inflation, interest rates and economic growth."]],
+  "Economics": [["Microeconomics","Economics","Consumer behaviour, firms, prices and market structures."],["Macroeconomics","Economics","National income, inflation, unemployment and economic growth."],["Econometrics","Statistics","Using statistical methods to analyse economic data."],["Mathematical Economics","Statistics","Mathematical tools for economic models."],["Public Finance","Economics","Government revenue, expenditure, taxation and public debt."]],
+  "Computer Science": [["Programming Fundamentals","Computer Science","Core programming concepts, algorithms and problem solving."],["Data Structures and Algorithms","Computer Science","Organising data and analysing algorithm efficiency."],["Database Systems","Computer Science","Relational databases, SQL and data modelling."],["Operating Systems","Computer Science","Processes, memory, files and operating-system concepts."],["Computer Networks","Computer Science","Network models, protocols and data communication."],["Software Engineering","Computer Science","Requirements, design, testing and software maintenance."]],
+  "Mathematics": [["Calculus","Actuarial Mathematics","Limits, differentiation, integration and applications."],["Linear Algebra","Actuarial Mathematics","Vectors, matrices, linear systems and transformations."],["Real Analysis","Actuarial Mathematics","Limits, continuity, sequences and rigorous mathematical proofs."],["Differential Equations","Actuarial Mathematics","Methods for solving ordinary differential equations."],["Probability Theory","Statistics","Probability spaces, random variables and distributions."]],
+  "Statistics": [["Probability Theory","Statistics","Probability rules, random variables and distributions."],["Statistical Inference","Statistics","Estimation, confidence intervals and hypothesis testing."],["Regression Analysis","Statistics","Modelling relationships between variables."],["Sampling Techniques","Statistics","Sampling designs, surveys and sampling errors."],["Time Series Analysis","Statistics","Trend, seasonality and forecasting with time-dependent data."]],
+  "Law": [["Constitutional Law","Law","Constitutional principles, institutions and fundamental rights."],["Contract Law","Law","Formation, terms, performance and breach of contracts."],["Criminal Law","Law","Criminal responsibility, offences and defences."],["Law of Torts","Law","Civil wrongs, negligence and remedies."],["Property Law","Law","Legal interests in land and property transactions."]],
+  "Medicine and Surgery": [["Human Anatomy","Health Sciences","Structure and organisation of the human body."],["Human Physiology","Health Sciences","How body systems function and interact."],["Medical Biochemistry","Health Sciences","Biochemical processes relevant to human health."],["Histology","Health Sciences","Microscopic structure of tissues and organs."],["Embryology","Health Sciences","Human development from fertilisation through early development."]],
+  "Human Anatomy": [["Gross Anatomy","Health Sciences","Structure and relationships of body parts."],["Histology","Health Sciences","Microscopic structure of tissues and organs."],["Embryology","Health Sciences","Human development and organ formation."],["Neuroanatomy","Health Sciences","Structure of the brain, spinal cord and nerves."]],
+  "Human Physiology": [["Cell Physiology","Health Sciences","Cell function, transport and signalling."],["Cardiovascular Physiology","Health Sciences","Heart function, circulation and blood pressure."],["Respiratory Physiology","Health Sciences","Breathing, gas exchange and respiratory regulation."],["Renal Physiology","Health Sciences","Kidney function, fluid balance and waste removal."]],
+  "Agricultural Economics, Extension & Rural Development": [["Agricultural Economics","Agriculture","Economic principles applied to agricultural production and markets."],["Farm Management","Agriculture","Planning, budgeting and managing farm resources."],["Agricultural Extension","Agriculture","Communicating agricultural knowledge and practices."],["Rural Development","Agriculture","Approaches to improving rural livelihoods and services."]],
+  "Animal Science and Fisheries": [["Animal Nutrition","Agriculture","Nutrients, feed formulation and animal growth."],["Animal Breeding","Agriculture","Genetics and selection for improved animal production."],["Fisheries Management","Agriculture","Aquatic resources, fish production and sustainable management."],["Animal Production","Agriculture","Housing, health and production systems for farm animals."]],
+  "Crop Science and Biotechnology": [["Crop Physiology","Agriculture","Growth, development and environmental responses of crops."],["Plant Breeding","Agriculture","Crop improvement and selection methods."],["Crop Protection","Agriculture","Pests, diseases and weed management."],["Plant Biotechnology","Agriculture","Biotechnology methods used in plant science."]],
+  "Food Science and Technology": [["Food Chemistry","Agriculture","Chemical composition and reactions in food."],["Food Microbiology","Agriculture","Microorganisms, food safety and preservation."],["Food Processing","Agriculture","Processing, packaging and preservation methods."],["Food Quality Control","Agriculture","Food standards, quality assurance and safety."]],
+  "Soil Science and Environment": [["Soil Fertility","Agriculture","Soil nutrients and practices for maintaining fertility."],["Soil Physics","Agriculture","Soil water, air, temperature and physical properties."],["Environmental Pollution","Agriculture","Pollutants, environmental impacts and control measures."],["Soil Conservation","Agriculture","Preventing erosion and protecting soil resources."]]
+};
+
+const facultySelect = $("subjectFaculty");
+const programmeSelect = $("subjectProgramme");
+const presetSelect = $("subjectPreset");
+function addSelectOptions(select, options, firstLabel) {
+  select.innerHTML = "";
+  const first = document.createElement("option"); first.value = ""; first.textContent = firstLabel; select.appendChild(first);
+  options.forEach(value => { const option = document.createElement("option"); option.value = value; option.textContent = value; select.appendChild(option); });
+}
+addSelectOptions(facultySelect, Object.keys(IMSU_PROGRAMMES), "Choose your faculty");
+facultySelect.addEventListener("change", () => {
+  const faculty = facultySelect.value;
+  addSelectOptions(programmeSelect, faculty ? IMSU_PROGRAMMES[faculty] : [], faculty ? "Choose your programme" : "Choose a faculty first");
+  programmeSelect.disabled = !faculty;
+  addSelectOptions(presetSelect, [], "Choose your course first (optional)");
+  presetSelect.disabled = true;
+});
+programmeSelect.addEventListener("change", () => {
+  const programme = programmeSelect.value;
+  let suggestions = SUBJECT_SUGGESTIONS[programme];
+  if (!suggestions) {
+    // Provide broad study-topic suggestions when a dedicated list is not yet available.
+    const faculty = facultySelect.value;
+    const fallback = {
+      "Agriculture and Veterinary Medicine": [["Introduction to the Field","Agriculture","Foundational concepts, terminology and principles in this programme."],["Research Methods","General","Research design, academic writing and data collection."],["Practical Applications","General","Core practical skills and applications related to this programme."]],
+      "Basic Medical Sciences": [["Human Anatomy","Health Sciences","Structure and organisation of the human body."],["Human Physiology","Health Sciences","How body systems function and interact."],["Medical Biochemistry","Health Sciences","Biochemical processes relevant to human health."]],
+      "Education": [["Foundations of Education","Education","Educational theories, history and the role of education."],["Curriculum Studies","Education","Curriculum planning, implementation and evaluation."],["Educational Psychology","Education","Learning, development and learner differences."],["Teaching Practice","Education","Planning lessons and reflecting on classroom practice."]],
+      "Engineering": [["Engineering Mathematics","Engineering","Mathematical methods used to solve engineering problems."],["Engineering Drawing","Engineering","Technical drawings, dimensions and design communication."],["Materials and Workshop Practice","Engineering","Engineering materials, tools and practical processes."],["Research Methods","General","Research design, academic writing and data collection."]],
+      "Environmental Sciences": [["Design Principles","General","Core design concepts and professional practice in this field."],["Building and Environmental Technology","General","Materials, systems and environmental considerations."],["Surveying Fundamentals","General","Measurement, mapping and spatial data concepts."]],
+      "Health Sciences": [["Human Anatomy","Health Sciences","Structure and organisation of the human body."],["Human Physiology","Health Sciences","How body systems function and interact."],["Nutrition Fundamentals","Health Sciences","Nutrients, dietary requirements and health."],["Public Health Principles","Health Sciences","Population health, prevention and health promotion."]],
+      "Humanities": [["Research Methods","Arts & Humanities","Research, critical reading and academic writing."],["Literary and Cultural Studies","Arts & Humanities","Texts, culture, interpretation and critical analysis."],["Language and Communication","Arts & Humanities","Language structure, use and communication." ]],
+      "Law": [["Constitutional Law","Law","Constitutional principles, institutions and fundamental rights."],["Contract Law","Law","Formation, terms, performance and breach of contracts."],["Legal Research and Writing","Law","Legal sources, case analysis and structured legal writing."]],
+      "Management Sciences": [["Principles of Management","General","Planning, organising, leadership and control."],["Business Communication","General","Professional writing, presentations and communication."],["Business Statistics","Statistics","Descriptive statistics and quantitative decision-making."],["Financial Management","Finance","Financial planning, investment and financing decisions."]],
+      "Physical Sciences": [["Research Methods","General","Research design, academic writing and data collection."],["Quantitative Methods","Statistics","Mathematical and statistical methods for problem solving."],["Laboratory Methods","General","Laboratory safety, measurement and reporting."]],
+      "Biological Sciences": [["Cell Biology","Health Sciences","Cell structure, function and biological processes."],["Genetics","Health Sciences","Heredity, genes and variation in living organisms."],["Ecology","Health Sciences","Interactions between organisms and their environment."],["Research Methods","General","Research design, academic writing and data collection."]],
+      "Social Sciences": [["Research Methods","General","Research design, surveys, interviews and data analysis."],["Social Theory","General","Theories used to understand people and society."],["Statistics for Social Sciences","Statistics","Descriptive statistics and interpreting social data."],["Public Policy","General","Policy development, implementation and evaluation."]],
+      "College of Medicine": [["Human Anatomy","Health Sciences","Structure and organisation of the human body."],["Human Physiology","Health Sciences","How body systems function and interact."],["Medical Biochemistry","Health Sciences","Biochemical processes relevant to human health."]]
+    };
+    suggestions = fallback[faculty] || [["Introduction to the Field","General","Foundational concepts and terminology for this programme."],["Research Methods","General","Research design, academic writing and data collection."],["Practical Applications","General","Core practical skills and applications related to this programme."]];
+  }
+  presetSelect.innerHTML = '<option value="">Choose a suggested subject (optional)</option>';
+  suggestions.forEach((item, index) => {
+    const option = document.createElement("option"); option.value = String(index); option.textContent = item[0]; presetSelect.appendChild(option);
+  });
+  presetSelect.disabled = false;
+});
+presetSelect.addEventListener("change", () => {
+  if (presetSelect.value === "") return;
+  const programme = programmeSelect.value;
+  let suggestions = SUBJECT_SUGGESTIONS[programme];
+  if (!suggestions) {
+    const faculty = facultySelect.value;
+    const fallback = {
+      "Agriculture and Veterinary Medicine": [["Introduction to the Field","Agriculture","Foundational concepts, terminology and principles in this programme."],["Research Methods","General","Research design, academic writing and data collection."],["Practical Applications","General","Core practical skills and applications related to this programme."]],
+      "Basic Medical Sciences": [["Human Anatomy","Health Sciences","Structure and organisation of the human body."],["Human Physiology","Health Sciences","How body systems function and interact."],["Medical Biochemistry","Health Sciences","Biochemical processes relevant to human health."]],
+      "Education": [["Foundations of Education","Education","Educational theories, history and the role of education."],["Curriculum Studies","Education","Curriculum planning, implementation and evaluation."],["Educational Psychology","Education","Learning, development and learner differences."],["Teaching Practice","Education","Planning lessons and reflecting on classroom practice."]],
+      "Engineering": [["Engineering Mathematics","Engineering","Mathematical methods used to solve engineering problems."],["Engineering Drawing","Engineering","Technical drawings, dimensions and design communication."],["Materials and Workshop Practice","Engineering","Engineering materials, tools and practical processes."],["Research Methods","General","Research design, academic writing and data collection."]],
+      "Environmental Sciences": [["Design Principles","General","Core design concepts and professional practice in this field."],["Building and Environmental Technology","General","Materials, systems and environmental considerations."],["Surveying Fundamentals","General","Measurement, mapping and spatial data concepts."]],
+      "Health Sciences": [["Human Anatomy","Health Sciences","Structure and organisation of the human body."],["Human Physiology","Health Sciences","How body systems function and interact."],["Nutrition Fundamentals","Health Sciences","Nutrients, dietary requirements and health."],["Public Health Principles","Health Sciences","Population health, prevention and health promotion."]],
+      "Humanities": [["Research Methods","Arts & Humanities","Research, critical reading and academic writing."],["Literary and Cultural Studies","Arts & Humanities","Texts, culture, interpretation and critical analysis."],["Language and Communication","Arts & Humanities","Language structure, use and communication."]],
+      "Law": [["Constitutional Law","Law","Constitutional principles, institutions and fundamental rights."],["Contract Law","Law","Formation, terms, performance and breach of contracts."],["Legal Research and Writing","Law","Legal sources, case analysis and structured legal writing."]],
+      "Management Sciences": [["Principles of Management","General","Planning, organising, leadership and control."],["Business Communication","General","Professional writing, presentations and communication."],["Business Statistics","Statistics","Descriptive statistics and quantitative decision-making."],["Financial Management","Finance","Financial planning, investment and financing decisions."]],
+      "Physical Sciences": [["Research Methods","General","Research design, academic writing and data collection."],["Quantitative Methods","Statistics","Mathematical and statistical methods for problem solving."],["Laboratory Methods","General","Laboratory safety, measurement and reporting."]],
+      "Biological Sciences": [["Cell Biology","Health Sciences","Cell structure, function and biological processes."],["Genetics","Health Sciences","Heredity, genes and variation in living organisms."],["Ecology","Health Sciences","Interactions between organisms and their environment."],["Research Methods","General","Research design, academic writing and data collection."]],
+      "Social Sciences": [["Research Methods","General","Research design, surveys, interviews and data analysis."],["Social Theory","General","Theories used to understand people and society."],["Statistics for Social Sciences","Statistics","Descriptive statistics and interpreting social data."],["Public Policy","General","Policy development, implementation and evaluation."]],
+      "College of Medicine": [["Human Anatomy","Health Sciences","Structure and organisation of the human body."],["Human Physiology","Health Sciences","How body systems function and interact."],["Medical Biochemistry","Health Sciences","Biochemical processes relevant to human health."]]
+    };
+    suggestions = fallback[faculty] || [["Introduction to the Field","General","Foundational concepts and terminology for this programme."],["Research Methods","General","Research design, academic writing and data collection."],["Practical Applications","General","Core practical skills and applications related to this programme."]];
+  }
+  const item = suggestions[Number(presetSelect.value)];
+  if (!item) return;
+  $("subjectTitle").value = item[0];
+  $("subjectCategory").value = item[1];
+  $("subjectDescription").value = item[2];
+});
+
+$("subjectForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(!currentUser){showToast("Please sign in to add a subject.");return;}
+  const title=$("subjectTitle").value.trim(),category=$("subjectCategory").value,description=$("subjectDescription").value.trim();
+  if(!title||!description){showToast("Enter a subject name and description.");return;}
+  if(title.length>80||description.length>500){showToast("Please shorten the subject details.");return;}
+  $("addSubjectBtn").disabled=true;$("addSubjectBtn").textContent="Saving subject…";
+  try{
+    await addDoc(collection(db,"users",currentUser.uid,"subjects"),{title,category,description,faculty:$("subjectFaculty").value,programme:$("subjectProgramme").value,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+    $("subjectForm").reset();
+    programmeSelect.disabled=true; presetSelect.disabled=true;
+    addSelectOptions(programmeSelect, [], "Choose a faculty first");
+    addSelectOptions(presetSelect, [], "Choose your course first (optional)");
+    showToast("Your subject has been added and saved to your account.");
+  }catch(error){showToast(friendlyError(error));}
+  finally{$("addSubjectBtn").disabled=false;$("addSubjectBtn").textContent="＋ Save subject";}
+});
+async function deleteCustomSubject(id){
+  const subject=customSubjects.find(item=>item.id===id);
+  if(!subject||!currentUser)return;
+  if(!confirm(`Delete your subject “${subject.title}”? This cannot be undone.`))return;
+  try{
+    await deleteDoc(doc(db,"users",currentUser.uid,"subjects",id));
+    await saveUserField("studyProgress",id,false).catch(()=>{});
+    showToast("Custom subject deleted.");
+  }catch(error){showToast(friendlyError(error));}
+}
+async function toggleStudy(id,value){
+  try{await saveUserField("studyProgress",id,value);showToast(value?"Study topic marked complete.":"Study topic reopened.");}
+  catch(error){showToast(friendlyError(error));}
+}
+$("studySearch").addEventListener("input",renderStudy);
+$("studyFilter").addEventListener("change",renderStudy);
+
+$("noteForm").addEventListener("submit",async event=>{
+  event.preventDefault();if(!currentUser)return;
+  const title=$("noteTitle").value.trim(),body=$("noteBody").value.trim(),category=$("noteCategory").value;
+  if(!title||!body){showToast("Add a title and some note content.");return;}
+  $("saveNoteBtn").disabled=true;
+  try{
+    const payload={title,body,category,updatedAt:serverTimestamp()};
+    if(editingNoteId)await updateDoc(doc(db,"users",currentUser.uid,"notes",editingNoteId),payload);
+    else await addDoc(collection(db,"users",currentUser.uid,"notes"),{...payload,createdAt:serverTimestamp()});
+    resetNoteForm();showToast(editingNoteId?"Note updated.":"Note saved.");
+  }catch(error){showToast(friendlyError(error));}
+  finally{$("saveNoteBtn").disabled=false;}
+});
+function resetNoteForm(){
+  editingNoteId=null;$("noteForm").reset();$("noteFormTitle").textContent="Create a note";$("saveNoteBtn").textContent="Save note";$("cancelEdit").classList.add("hidden");
+}
+$("cancelEdit").addEventListener("click",resetNoteForm);
+function renderNotes(){
+  $("notesBadge").textContent=`${notesData.length} ${notesData.length===1?"note":"notes"}`;
+  $("notesSubtitle").textContent=notesData.length?"Your saved notes":"Notes saved to your account";
+  $("notesList").innerHTML=notesData.length?notesData.map(note=>`<article class="note-card"><h4>${escapeHTML(note.title||"Untitled note")}</h4><span class="pill blue">${escapeHTML(note.category||"General")}</span><p style="margin-top:10px">${escapeHTML(note.body||"")}</p><footer><span>${note.updatedAt?.toDate?note.updatedAt.toDate().toLocaleDateString():"Saved note"}</span><span style="display:flex;gap:7px"><button class="btn btn-outline btn-small" data-edit-note="${note.id}">Edit</button><button class="btn btn-danger btn-small" data-delete-note="${note.id}">Delete</button></span></footer></article>`).join(""):`<div class="empty">📝<br><br>No notes yet. Create your first revision note using the form.</div>`;
+  $("notesList").querySelectorAll("[data-edit-note]").forEach(button=>button.addEventListener("click",()=>editNote(button.dataset.editNote)));
+  $("notesList").querySelectorAll("[data-delete-note]").forEach(button=>button.addEventListener("click",()=>removeNote(button.dataset.deleteNote)));
+}
+function escapeHTML(value){return safeText(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
+function editNote(id){
+  const note=notesData.find(item=>item.id===id);if(!note)return;
+  editingNoteId=id;$("noteTitle").value=note.title||"";$("noteBody").value=note.body||"";$("noteCategory").value=note.category||"General";
+  $("noteFormTitle").textContent="Edit note";$("saveNoteBtn").textContent="Update note";$("cancelEdit").classList.remove("hidden");
+  $("noteTitle").focus();window.scrollTo({top:0,behavior:"smooth"});
+}
+async function removeNote(id){
+  if(!confirm("Delete this note permanently?"))return;
+  try{await deleteDoc(doc(db,"users",currentUser.uid,"notes",id));if(editingNoteId===id)resetNoteForm();showToast("Note deleted.");}
+  catch(error){showToast(friendlyError(error));}
+}
+function renderProfile(){
+  if(!currentUser)return;
+  const label=currentUser.displayName||currentUser.email?.split("@")[0]||"Student";
+  $("profileName").textContent=label;$("profileInitials").textContent=initials(label);
+  $("profileEmail").textContent=currentUser.email||"";$("profileEmailField").textContent=currentUser.email||"—";$("profileUid").textContent=currentUser.uid;
+}
+function renderAll(){renderDashboard();renderClearance();renderStudy();renderNotes();}
+$("globalSearch").addEventListener("keydown",event=>{
+  if(event.key!=="Enter")return;
+  const term=$("globalSearch").value.trim();if(!term)return;
+  $("clearanceSearch").value=term;$("studySearch").value=term;
+  if(clearanceItems.some(item=>(item.title+" "+item.desc).toLowerCase().includes(term.toLowerCase())))navigate("clearance");
+  else if(allStudyItems().some(item=>(item.title+" "+item.description).toLowerCase().includes(term.toLowerCase())))navigate("study");
+  else{navigate("notes");showToast("Search notes in the My Notes section by browsing your saved notes.");}
+});
+renderAll();
+</script>
+</body>
+</html>
